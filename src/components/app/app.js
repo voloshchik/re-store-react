@@ -1,9 +1,11 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import HomePage from "../pages/home-page";
-import CardPage from "../pages/cards-page";
+import HomePage from "../pages/home-page/home-page";
+import CardPage from "../pages/cards-page/cards-page";
+import { connect } from 'react-redux';
 
-const App = () => {
+const App = (props) => {
+  
   return (
     <Switch>
       <Route exact path="/" component={HomePage} />
@@ -12,4 +14,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default  App
