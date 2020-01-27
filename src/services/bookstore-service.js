@@ -18,9 +18,13 @@ export default class BookstoreService {
     }
   ];
   getBooks() {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        return resolve(this.data);
+        if (Math.random() < 0.75) {
+          return resolve(this.data);
+        } else {
+          return reject(new Error("Something went wrong"));
+        }
       }, 800);
     });
   }
