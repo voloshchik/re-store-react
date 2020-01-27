@@ -4,6 +4,8 @@ import "./books-list.css";
 import { connect } from "react-redux";
 import withBookstoreService from "../hoc/with-bookstore-service";
 import compose from "../utility/compose";
+import { booksLoaded } from "../../actions";
+import { bindActionCreators } from "redux";
 
 class BookList extends Component {
   componentDidMount() {
@@ -18,10 +20,10 @@ class BookList extends Component {
 
     return (
       <div>
-        <ul className="list-group list-group-flush">
+        <ul className="">
           {books.map((book, id) => {
             return (
-              <li key={id} className="list-group-item ">
+              <li key={id} className="  ">
                 <BooksListItem book={book} />
               </li>
             );
@@ -36,11 +38,8 @@ const mapStateToProps = state => {
     books: state.books
   };
 };
-const mapDispatchToProps = dispatch => {
-  return {
-    booksLoaded: newBooks =>
-      dispatch({ type: "BOOKS_LOADED", payload: newBooks })
-  };
+const mapDispatchToProps = {
+  booksLoaded
 };
 export default compose(
   withBookstoreService(),
