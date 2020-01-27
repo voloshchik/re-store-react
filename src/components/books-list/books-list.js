@@ -4,42 +4,46 @@ import "./books-list.css";
 import { connect } from "react-redux";
 import withBookstoreService from "../hoc/with-bookstore-service";
 import compose from "../utility/compose";
-import { booksLoaded } from "../../actions";
-import { bindActionCreators } from "redux";
+import { booksLoaded, booksRequest } from '../../actions';
+import Spinner from '../spinner/spinner';
 
 class BookList extends Component {
   componentDidMount() {
-    const { bookstoreService, booksLoaded } = this.props;
-    const data = bookstoreService.getBooks();
-    console.log("data=", data);
-    booksLoaded(data);
+    const { bookstoreService, booksLoaded,booksRequest } = this.props;
+    booksRequest()
+    bookstoreService.getBooks().then(data => {
+      booksLoaded(data);
+    });
   }
   render() {
     console.log("books", this.props.books);
-    const { books } = this.props;
-
-    return (
-      <div>
-        <ul className="">
-          {books.map((book, id) => {
-            return (
-              <li key={id} className="  ">
-                <BooksListItem book={book} />
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    );
+    const { books, loading } = this.props;
+    if (loading){
+      return <Spinner/>
+    }
+      return (
+        <div>
+          <ul className="">
+            {books.map((book, id) => {
+              return (
+                <li key={id} className="  ">
+                  <BooksListItem book={book} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      );
   }
 }
 const mapStateToProps = state => {
   return {
-    books: state.books
+    books: state.books,
+    loading: state.loading
   };
 };
 const mapDispatchToProps = {
-  booksLoaded
+  booksLoaded,booksRequest
 };
 export default compose(
   withBookstoreService(),
