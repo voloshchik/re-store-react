@@ -20,6 +20,7 @@ const initialState = {
   ]
 };
 const reducer = (state = initialState, action) => {
+  console.log(action.type)
   switch (action.type) {
     case "FETCH_BOOKS_SUCCESS":
       return {
@@ -41,6 +42,11 @@ const reducer = (state = initialState, action) => {
         books: [],
         loading: false,
         error: action.payload
+      };
+    case "ADDED_BOOK_CARD":
+      return {
+        ...state,
+       
       };
     default:
       return state;

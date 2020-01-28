@@ -4,29 +4,37 @@ import "./books-list.css";
 import { connect } from "react-redux";
 import withBookstoreService from "../hoc/with-bookstore-service";
 import compose from "../utility/compose";
-import { booksLoaded, booksRequest, booksError, fetchBooks } from '../../actions';
+import {
+  booksLoaded,
+  booksRequest,
+  booksError,
+  fetchBooks,
+  addedBookCart
+} from "../../actions";
 import Spinner from "../spinner/spinner";
 import ErrorIndicator from "../error-indicator/error-indicator";
 
- const BooksList=({books})=>{
-  return( <div>
-    <ul className="">
-      {books.map((book, id) => {
-        return (
-          <li key={id} className="  ">
-            <BooksListItem book={book} />
-          </li>
-        );
-      })}
-    </ul>
-  </div>)
-}
+const BooksList = ({ books, onAddedCard }) => {
+  return (
+    <div>
+      <ul className="">
+        {books.map((book, id) => {
+          return (
+            <li key={id} className="  ">
+              <BooksListItem book={book} onAddedCard={() => onAddedCard(id)} />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
 class BookListContainer extends Component {
   componentDidMount() {
-    this.props.fetchBooks()
+    this.props.fetchBooks();
   }
   render() {
-    const { books, loading, error } = this.props;
+    const { books, loading, error, onAddedCard } = this.props;
     console.log(loading);
     if (loading) {
       return <Spinner />;
@@ -35,9 +43,7 @@ class BookListContainer extends Component {
       console.log(error);
       return <ErrorIndicator />;
     }
-    return <BooksList books={books} />
-     
-    
+    return <BooksList books={books} onAddedCard={onAddedCard} />;
   }
 }
 const mapStateToProps = state => {
@@ -47,10 +53,10 @@ const mapStateToProps = state => {
     error: state.error
   };
 };
-const mapDispatchToProps = (dispatch, {bookstoreService}) => {
-  
+const mapDispatchToProps = (dispatch, { bookstoreService }) => {
   return {
-    fetchBooks:fetchBooks(bookstoreService,dispatch)
+    fetchBooks: fetchBooks(bookstoreService, dispatch),
+    onAddedCard: id => dispatch(addedBookCart(id))
   };
 };
 export default compose(
