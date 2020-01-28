@@ -21,7 +21,7 @@ const BooksList = ({ books, onAddedCard }) => {
         {books.map((book, id) => {
           return (
             <li key={id} className="  ">
-              <BooksListItem book={book} onAddedCard={() => onAddedCard(id)} />
+              <BooksListItem book={book} onAddedCard={() => onAddedCard(book.id)} />
             </li>
           );
         })}
