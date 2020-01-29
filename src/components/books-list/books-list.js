@@ -5,12 +5,14 @@ import { connect } from "react-redux";
 import withBookstoreService from "../hoc/with-bookstore-service";
 import compose from "../utility/compose";
 import {
-  booksLoaded,
-  booksRequest,
-  booksError,
-  fetchBooks,
-  addedBookCart
-} from "../../actions";
+    booksLoaded,
+    booksRequest,
+    booksError,
+    fetchBooks,
+  
+    bookAddedfromCart,
+    bookAddedToCart
+} from '../../actions';
 import Spinner from "../spinner/spinner";
 import ErrorIndicator from "../error-indicator/error-indicator";
 
@@ -21,7 +23,10 @@ const BooksList = ({ books, onAddedCard }) => {
         {books.map((book, id) => {
           return (
             <li key={id} className="  ">
-              <BooksListItem book={book} onAddedCard={() => onAddedCard(book.id)} />
+              <BooksListItem
+                book={book}
+                onAddedCard={() => onAddedCard(book.id)}
+              />
             </li>
           );
         })}
@@ -56,7 +61,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, { bookstoreService }) => {
   return {
     fetchBooks: fetchBooks(bookstoreService, dispatch),
-    onAddedCard: id => dispatch(addedBookCart(id))
+    onAddedCard: id => dispatch(bookAddedToCart(id))
   };
 };
 export default compose(
