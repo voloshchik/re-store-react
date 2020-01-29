@@ -17,7 +17,7 @@ const booksError = error => {
 };
 const addedBookCart = bookId => {
   return {
-    type: "ADDED_BOOK_CARD",
+    type: "ADDED_BOOK_TO_CARD",
     payload: bookId
   };
 };
