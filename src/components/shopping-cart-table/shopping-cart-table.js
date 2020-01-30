@@ -68,8 +68,8 @@ const ShoppingCartTable = ({
 };
 const mapStateToProps = state => {
   return {
-    items: state.cartItems,
-    total: state.orderTotal
+    items: state.shoppingCart.cartItems,
+    total: state.shoppingCart.orderTotal
   };
 };
 const mapDispatchToProps = dispatch => {

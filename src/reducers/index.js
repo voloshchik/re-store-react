@@ -1,22 +1,6 @@
 const initialState = {
-  books: [],
-  loading: true,
-  error: null,
-  orderTotal: 100,
-  cartItems: [
-    // {
-    //   id: 1,
-    //   name: "Book 1",
-    //   count: 3,
-    //   total: 150
-    // },
-    // {
-    //   id: 2,
-    //   name: "Book 2",
-    //   count: 2,
-    //   total: 70
-    // }
-  ]
+  bookList: { books: [], loading: true, error: null },
+  shoppingCart: { orderTotal: 0, cartItems: [] }
 };
 const updateCartItems = (cartItems, item, idx) => {
   if (item.count === 0) {
@@ -39,48 +23,78 @@ const updateCartItem = (item = {}, book, quantity) => {
   };
 };
 const updateOrder = (state, bookId, quantity) => {
-  const { books, cartItems } = state;
+  const {
+    bookList: { books },
+    shoppingCart: { cartItems }
+  } = state;
   const book = books.find(book => book.id === bookId);
   const itemIndex = cartItems.findIndex(item => item.id === bookId);
   const item = cartItems[itemIndex];
   let newItem = updateCartItem(item, book, quantity);
   return {
-    ...state,
+    orderTotal: 0,
     cartItems: updateCartItems(cartItems, newItem, itemIndex)
   };
 };
-const reducer = (state = initialState, action) => {
+
+const updateBookList = (state, action) => {
+  // eslint-disable-next-line default-case
   switch (action.type) {
     case "FETCH_BOOKS_SUCCESS":
       return {
-        ...state,
         books: action.payload,
         loading: false,
         error: null
       };
     case "FETCH_BOOKS_REQUEST":
       return {
-        ...state,
         books: [],
         loading: true,
         error: null
       };
     case "FETCH_BOOKS_FAILURE":
       return {
-        ...state,
         books: [],
         loading: false,
         error: action.payload
       };
+  }
+};
+
+const updateShoppingCart = (state, action) => {
+  // eslint-disable-next-line default-case
+  switch (action.type) {
     case "BOOK_ADDED_TO_CART":
       return updateOrder(state, action.payload, +1);
     case "BOOK_REMOVED_FROM_CART":
       return updateOrder(state, action.payload, -1);
     case "ALL_BOOKS_REMOVED_FROM_CART":
       const bookId = action.payload;
-      const itemIndex = state.cartItems.findIndex(book => book.id === bookId);
-      const item = state.cartItems[itemIndex];
+      const itemIndex = state.shoppingCart.cartItems.findIndex(
+        book => book.id === bookId
+      );
+      const item = state.shoppingCart.cartItems[itemIndex];
       return updateOrder(state, action.payload, -item.count);
+  }
+};
+
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "FETCH_BOOKS_SUCCESS":
+    case "FETCH_BOOKS_REQUEST":
+    case "FETCH_BOOKS_FAILURE":
+      return {
+        ...state,
+        bookList: updateBookList(state, action)
+      };
+    case "BOOK_ADDED_TO_CART":
+    case "BOOK_REMOVED_FROM_CART":
+    case "ALL_BOOKS_REMOVED_FROM_CART":
+      return {
+        ...state,
+        shoppingCart: updateShoppingCart(state, action)
+      };
+
     default:
       return state;
   }
