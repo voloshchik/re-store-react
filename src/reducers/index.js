@@ -34,6 +34,17 @@ const updateCartItem = (item = {}, book) => {
     total: total + book.price
   };
 };
+const updateOrder = (state, bookId) => {
+  const { books, cartItems } = state;
+  const book = books.find(book => book.id === bookId);
+  const itemIndex = cartItems.findIndex(item => item.id === bookId);
+  const item = cartItems[itemIndex];
+  let newItem = updateCartItem(item, book);
+  return {
+    ...state,
+    cartItems: updateCartItems(cartItems, newItem, itemIndex)
+  };
+};
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "FETCH_BOOKS_SUCCESS":
@@ -58,17 +69,11 @@ const reducer = (state = initialState, action) => {
         error: action.payload
       };
     case "BOOK_ADDED_TO_CART":
-      const bookId = action.payload;
-      const book = state.books.find(book => book.id === bookId);
-      const itemIndex = state.cartItems.findIndex(item => item.id === bookId);
-      const item = state.cartItems[itemIndex];
-      let newItem = updateCartItem(item, book);
-      return {
-        ...state,
-        cartItems: updateCartItems(state.cartItems, newItem, itemIndex)
-      };
-   
+      return updateOrder(state, action.payload);
+    case "BOOK_REMOVED_FROM_CART":
 
+    case "ALL_BOOKS_REMOVED_FROM_CART":
+    return 
     default:
       return state;
   }
